@@ -4,7 +4,7 @@ import json
 import torch
 
 from model import NeuralNet
-from main import bag_of_words, tokenize , stem
+from main import bag_of_words, tokenize
 
 device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 
@@ -29,10 +29,8 @@ bot_name = "Sam"
 
 
 def get_response(msg):
-
     sentence = tokenize(msg)
     X = bag_of_words(sentence, all_words)
-    print(bag_of_words(sentence, all_words))
     X = X.reshape(1, X.shape[0])
     X = torch.from_numpy(X).to(device)
 
@@ -44,14 +42,15 @@ def get_response(msg):
     probs = torch.softmax(output, dim=1)
     prob = probs[0][predicted.item()]
 
-    if prob.item() > 0.95:
+    if prob.item() > 0.75:
 
 
         for intent in intents['intents']:
             if tag == intent["tag"]:
                 return random.choice(intent['responses'])
 
-    return "!? لم أفهم ما تقصده"
+    return "! لم أفهم ما تقصده"
+
 
 if __name__ == "__main__":
     print("Let's chat! (type 'quit' to exit)")

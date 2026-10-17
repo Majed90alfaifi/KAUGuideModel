@@ -3,8 +3,9 @@ from onnx_tf.backend import prepare
 import tensorflow as tf
 
 import torch
-from train import dummy_input
 from train import model,input_size,output_size
+
+dummy_input = torch.randn(1, input_size)
 
 #torch.onnx.export(model, dummy_input, "model.onnx")
 input_names = ['input']

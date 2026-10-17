@@ -8,7 +8,6 @@ from torch.utils.data import Dataset, DataLoader
 from main import bag_of_words, tokenize, stem
 from model import NeuralNet
 
-
 with open('data.json', 'r') as f:
     intents = json.load(f)
 
@@ -21,7 +20,7 @@ for intent in intents['intents']:
     # add to tag list
     tags.append(tag)
     for pattern in intent['patterns']:
-        # tokenize each word in the sentenceS
+        # tokenize each word in the sentence
         w = tokenize(pattern)
         # add to our words list
         all_words.extend(w)
@@ -39,20 +38,6 @@ print(len(xy), "patterns")
 print(len(tags), "tags:", tags)
 print(len(all_words), "unique stemmed words:", all_words)
 
-
-##
-# ignore_words = ['?', '.', '!']
-# all_words = [w for w in all_words if w not in ignore_words]
-# #remove duplicates and sort
-# all_words = sorted(set(all_words))
-# tags = sorted(set(tags))
-#
-# print(len(xy), "patterns")
-# print(len(tags), "tags:", tags)
-# print(len(all_words), "unique words:", all_words)
-
-##
-
 # create training data
 X_train = []
 y_train = []
@@ -60,8 +45,6 @@ for (pattern_sentence, tag) in xy:
     # X: bag of words for each pattern_sentence
     bag = bag_of_words(pattern_sentence, all_words)
     X_train.append(bag)
-
-
     # y: PyTorch CrossEntropyLoss needs only class labels, not one-hot
     label = tags.index(tag)
     y_train.append(label)
@@ -70,7 +53,7 @@ X_train = np.array(X_train)
 y_train = np.array(y_train)
 
 # Hyper-parameters
-num_epochs = 2000
+num_epochs = 1000
 batch_size = 8
 learning_rate = 0.001
 input_size = len(X_train[0])
@@ -144,11 +127,3 @@ FILE = "data.pth"
 torch.save(data, FILE)
 
 print(f'training complete. file saved to {FILE}')
-
-print('input size = ' + str(input_size))
-print('output size = ' + str(output_size))
-
-
-
-dummy_input = torch.randn(1, input_size) # adjust the size according to your input size
-
